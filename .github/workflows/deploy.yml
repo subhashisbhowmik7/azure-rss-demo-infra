@@ -32,4 +32,5 @@ jobs:
               @infra/parameters.json
               rssFeedUrl=${{ github.event.inputs.rssFeedUrl }}
               functionAppUri=${{ secrets.FUNCTION_APP_URI }}
+              functionAppKey=${{ secrets.FUNCTION_APP_KEY }}
           failOnStdErr: false
