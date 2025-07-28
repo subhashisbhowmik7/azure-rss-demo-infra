@@ -28,7 +28,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
           template: infra/template.json
-          parameters: |
+          parameters: >
               infra/parameters.json
               rssFeedUrl=${{ github.event.inputs.rssFeedUrl }}
               functionAppUri=${{ secrets.FUNCTION_APP_URI }}
