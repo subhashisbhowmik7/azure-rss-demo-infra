@@ -10,12 +10,24 @@ on:
     branches:
       - main
 
+env:
+  DEFAULT_RSS_FEED_URL: "https://timesofindia.indiatimes.com/rssfeedstopstories.cms"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Set RSS Feed URL
+        id: set_rss_url
+        run: |
+          if [ -z "${{ github.event.inputs.rssFeedUrl }}" ]; then
+            echo "rssFeedUrl=${{ env.DEFAULT_RSS_FEED_URL }}" >> $GITHUB_OUTPUT
+          else
+            echo "rssFeedUrl=${{ github.event.inputs.rssFeedUrl }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Log in to Azure
         uses: azure/login@v1
@@ -29,8 +41,8 @@ jobs:
           resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
           template: infra/template.json
           parameters: >
-              @infra/parameters.json
-              rssFeedUrl=${{ github.event.inputs.rssFeedUrl }}
-              functionAppUri=${{ secrets.FUNCTION_APP_URI }}
-              functionAppKey=${{ secrets.FUNCTION_APP_KEY }}
+            @infra/parameters.json
+            rssFeedUrl=${{ steps.set_rss_url.outputs.rssFeedUrl }}
+            functionAppUri=${{ secrets.FUNCTION_APP_URI }}
+            functionAppKey=${{ secrets.FUNCTION_APP_KEY }}
           failOnStdErr: false
