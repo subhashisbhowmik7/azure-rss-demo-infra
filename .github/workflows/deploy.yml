@@ -6,6 +6,9 @@ on:
       rssFeedUrl:
         description: "Enter the RSS Feed URL to deploy"
         required: true
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
