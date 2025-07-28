@@ -64,7 +64,7 @@
                 "method": "get",
                 "path": "/OnNewFeed",
                 "queries": {
-                  "feedUrl": "parameters('rssFeedUrl')"
+                  "feedUrl": "[parameters('rssFeedUrl')]"
                 }
               }
             }
