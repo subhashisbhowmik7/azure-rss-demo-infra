@@ -1,164 +1,164 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-         "functionAppKey": {
-            "type": "secureString"
-        },
-        "workflows_rss_feed_polling_name": {
-            "defaultValue": "rss-feed-polling",
-            "type": "String"
-        },
-        "connections_rss_externalid": {
-            "defaultValue": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/resourceGroups/SB-Test-RG/providers/Microsoft.Web/connections/rss",
-            "type": "String"
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workflows_rss_feed_polling_name": {
+      "type": "string",
+      "defaultValue": "rss-feed-polling"
     },
-    "variables": {},
-    "resources": [
-        {
-            "type": "Microsoft.Logic/workflows",
-            "apiVersion": "2017-07-01",
-            "name": "[parameters('workflows_rss_feed_polling_name')]",
-            "location": "southindia",
-            "properties": {
-                "state": "Enabled",
-                "definition": {
-                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {
-                        "$connections": {
-                            "defaultValue": {},
-                            "type": "Object"
-                        }
-                    },
-                    "triggers": {
-                        "Whenever_a_Feed_Item_is_Published": {
-                            "recurrence": {
-                                "interval": 30,
-                                "frequency": "Minute",
-                                "timeZone": "India Standard Time"
-                            },
-                            "evaluatedRecurrence": {
-                                "interval": 30,
-                                "frequency": "Minute",
-                                "timeZone": "India Standard Time"
-                            },
-                            "splitOn": "@triggerBody()?['value']",
-                            "type": "ApiConnection",
-                            "inputs": {
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['rss']['connectionId']"
-                                    }
-                                },
-                                "method": "get",
-                                "path": "/OnNewFeed",
-                                "queries": {
-                                    "feedUrl": "@{encodeURIComponent(encodeURIComponent('https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms'))}"
-                                }
-                            },
-                            "conditions": []
-                        }
-                    },
-                    "actions": {
-                        "Input_Title,_Link": {
-                            "runAfter": {
-                                "Initialize_lastItemId": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "Compose",
-                            "inputs": {
-                                "title": "@{triggerOutputs()?['body/title']}",
-                                "id": "@{triggerBody()?['id']}",
-                                "feedPublished": "@{triggerOutputs()?['body/publishDate']}",
-                                "feedSummary": "@{triggerBody()?['summary']}"
-                            }
-                        },
-                        "Condition": {
-                            "actions": {
-                                "Set_lastItemId": {
-                                    "type": "SetVariable",
-                                    "inputs": {
-                                        "name": "lastItemId",
-                                        "value": "@triggerBody()?['id']"
-                                    }
-                                },
-                                "Function_App": {
-                                    "runAfter": {
-                                        "Set_lastItemId": [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type": "Http",
-                                    "inputs": {
-                                        "uri": "[concat('https://serverless-demo-afgsgxhnarfgf3cg.centralus-01.azurewebsites.net/api/HttpTriggerJava1', '?code=', parameters('functionAppKey'))]",
-                                        "method": "POST",
-                                        "queries": {
-                                            "title": "@{triggerBody()?['title']}",
-                                            "id": "@{triggerBody()?['id']}",
-                                            "feedSummary": "@{triggerBody()?['summary']}",
-                                            "feedPublished": "@{triggerBody()?['publishDate']}"
-                                        }
-                                    },
-                                    "runtimeConfiguration": {
-                                        "contentTransfer": {
-                                            "transferMode": "Chunked"
-                                        }
-                                    }
-                                }
-                            },
-                            "runAfter": {
-                                "Input_Title,_Link": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "else": {
-                                "actions": {}
-                            },
-                            "expression": {
-                                "and": [
-                                    {
-                                        "not": {
-                                            "equals": [
-                                                "@triggerBody()?['id']",
-                                                "@variables('lastItemId')"
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "type": "If"
-                        },
-                        "Initialize_lastItemId": {
-                            "runAfter": {},
-                            "type": "InitializeVariable",
-                            "inputs": {
-                                "variables": [
-                                    {
-                                        "name": "lastItemId",
-                                        "type": "string",
-                                        "value": "\"\""
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "outputs": {}
-                },
-                "parameters": {
-                    "$connections": {
-                        "value": {
-                            "rss": {
-                                "id": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/providers/Microsoft.Web/locations/southindia/managedApis/rss",
-                                "connectionId": "[parameters('connections_rss_externalid')]",
-                                "connectionName": "rss"
-                            }
-                        }
-                    }
-                }
+    "connections_rss_externalid": {
+      "type": "string",
+      "defaultValue": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/resourceGroups/SB-Test-RG/providers/Microsoft.Web/connections/rss"
+    },
+    "rssFeedUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "RSS feed URL to monitor"
+      }
+    },
+    "functionAppUri": {
+      "type": "string",
+      "metadata": {
+        "description": "Base URL of the Azure Function App"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[parameters('workflows_rss_feed_polling_name')]",
+      "location": "southindia",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": {},
+              "type": "Object"
             }
+          },
+          "triggers": {
+            "Whenever_a_Feed_Item_is_Published": {
+              "recurrence": {
+                "interval": 30,
+                "frequency": "Minute",
+                "timeZone": "India Standard Time"
+              },
+              "splitOn": "@triggerBody()?['value']",
+              "type": "ApiConnection",
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['rss']['connectionId']"
+                  }
+                },
+                "method": "get",
+                "path": "/OnNewFeed",
+                "queries": {
+                  "feedUrl": "@{encodeURIComponent(encodeURIComponent(parameters('rssFeedUrl')))}"
+                }
+              }
+            }
+          },
+          "actions": {
+            "Input_Title_Link": {
+              "runAfter": {
+                "Initialize_lastItemId": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Compose",
+              "inputs": {
+                "title": "@{triggerOutputs()?['body/title']}",
+                "id": "@{triggerBody()?['id']}",
+                "feedPublished": "@{triggerOutputs()?['body/publishDate']}",
+                "feedSummary": "@{triggerBody()?['summary']}"
+              }
+            },
+            "Condition": {
+              "actions": {
+                "Set_lastItemId": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "lastItemId",
+                    "value": "@triggerBody()?['id']"
+                  }
+                },
+                "Function_App": {
+                  "runAfter": {
+                    "Set_lastItemId": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Http",
+                  "inputs": {
+                    "uri": "[concat(parameters('functionAppUri'), '/api/HttpTriggerJava1')]",
+                    "method": "POST",
+                    "authentication": {
+                      "type": "ManagedServiceIdentity"
+                    },
+                    "queries": {
+                      "title": "@{triggerBody()?['title']}",
+                      "id": "@{triggerBody()?['id']}",
+                      "feedSummary": "@{triggerBody()?['summary']}",
+                      "feedPublished": "@{triggerBody()?['publishDate']}"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Input_Title_Link": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@triggerBody()?['id']",
+                        "@variables('lastItemId')"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "type": "If"
+            },
+            "Initialize_lastItemId": {
+              "runAfter": {},
+              "type": "InitializeVariable",
+              "inputs": {
+                "variables": [
+                  {
+                    "name": "lastItemId",
+                    "type": "string",
+                    "value": ""
+                  }
+                ]
+              }
+            }
+          },
+          "outputs": {}
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "rss": {
+                "id": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/providers/Microsoft.Web/locations/southindia/managedApis/rss",
+                "connectionId": "[parameters('connections_rss_externalid')]",
+                "connectionName": "rss"
+              }
+            }
+          }
         }
-    ]
+      }
+    }
+  ]
 }

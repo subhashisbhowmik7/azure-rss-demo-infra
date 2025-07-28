@@ -2,9 +2,10 @@ name: Deploy Azure ARM Template
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+    inputs:
+      rssFeedUrl:
+        description: "Enter the RSS Feed URL to deploy"
+        required: true
 
 jobs:
   deploy:
@@ -24,5 +25,8 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
           template: infra/template.json
-          parameters: infra/parameters.json
+          parameters: |
+              infra/parameters.json
+              rssFeedUrl=${{ secrets.RSS_FEED_URL }}
+              functionAppUri=${{ secrets.FUNCTION_APP_URI }}
           failOnStdErr: false

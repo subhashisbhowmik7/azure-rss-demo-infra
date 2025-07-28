@@ -3,10 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "workflows_rss_feed_polling_name": {
-            "value": null
+            "value": "rss-feed-polling"
         },
         "connections_rss_externalid": {
-            "value": null
+            "value": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/resourceGroups/SB-Test-RG/providers/Microsoft.Web/connections/rss"
+        },
+        "rssFeedUrl": {
+            "value": ""   
+        },
+        "functionAppUri": {
+        "value": ""
         }
     }
 }
