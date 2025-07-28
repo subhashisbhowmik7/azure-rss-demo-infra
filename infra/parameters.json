@@ -10,9 +10,6 @@
         },
         "rssFeedUrl": {
             "value": ""   
-        },
-        "functionAppUri": {
-        "value": ""
         }
     }
 }

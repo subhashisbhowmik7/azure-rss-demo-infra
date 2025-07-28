@@ -21,6 +21,12 @@
       "metadata": {
         "description": "Base URL of the Azure Function App"
       }
+    },
+    "functionAppKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Azure Function Key"
+      }
     }
   },
   "resources": [
@@ -28,10 +34,7 @@
       "type": "Microsoft.Logic/workflows",
       "apiVersion": "2017-07-01",
       "name": "[parameters('workflows_rss_feed_polling_name')]",
-      "location": "southindia",
-      "identity": {
-        "type": "SystemAssigned"
-      },
+      "location": "southindia",    
       "properties": {
         "state": "Enabled",
         "definition": {
@@ -61,7 +64,7 @@
                 "method": "get",
                 "path": "/OnNewFeed",
                 "queries": {
-                  "feedUrl": "@{encodeURIComponent(encodeURIComponent(parameters('rssFeedUrl')))}"
+                  "feedUrl": "parameters('rssFeedUrl')"
                 }
               }
             }
@@ -98,11 +101,8 @@
                   },
                   "type": "Http",
                   "inputs": {
-                    "uri": "[concat(parameters('functionAppUri'), '/api/HttpTriggerJava1')]",
+                    "uri": "[concat(parameters('functionAppUri'), '/api/HttpTriggerJava1?code=', parameters('functionAppKey'))]",
                     "method": "POST",
-                    "authentication": {
-                      "type": "ManagedServiceIdentity"
-                    },
                     "queries": {
                       "title": "@{triggerBody()?['title']}",
                       "id": "@{triggerBody()?['id']}",
