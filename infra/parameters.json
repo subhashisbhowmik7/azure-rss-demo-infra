@@ -9,7 +9,7 @@
             "value": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/resourceGroups/SB-Test-RG/providers/Microsoft.Web/connections/rss"
         },
         "rssFeedUrl": {
-        "value": "https://timesofindia.indiatimes.com/rssfeedstopstories.cms"
+        "value": "https://timesofindia.indiatimes.com/rssfeeds/4719148.cms"
         }
     }
 }

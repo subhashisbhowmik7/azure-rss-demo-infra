@@ -53,7 +53,7 @@
           "triggers": {
             "Whenever_a_Feed_Item_is_Published": {
               "recurrence": {
-                "interval": 2,
+                "interval": 30,
                 "frequency": "Minute",
                 "timeZone": "India Standard Time"
               },
