@@ -107,7 +107,10 @@
                   "inputs": {
                     "uri": "[concat(parameters('functionAppUri'), '/api/HttpTriggerJava1?code=', parameters('functionAppKey'))]",
                     "method": "POST",
-                    "queries": {
+                    "headers": {
+                      "Content-Type": "application/json"
+                    },
+                    "body": {
                       "title": "@{triggerBody()?['title']}",
                       "id": "@{triggerBody()?['id']}",
                       "feedSummary": "@{triggerBody()?['summary']}",
