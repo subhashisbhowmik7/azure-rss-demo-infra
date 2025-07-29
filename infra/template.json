@@ -47,7 +47,6 @@
               "type": "Object"
             },
             "rssFeedUrl": {
-              "value": "[parameters('rssFeedUrl')]",
               "type": "String"
             }
           },
