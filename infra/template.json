@@ -12,6 +12,7 @@
     },
     "rssFeedUrl": {
       "type": "string",
+      "defaultValue": "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
       "metadata": {
         "description": "RSS feed URL to monitor"
       }
@@ -44,12 +45,15 @@
             "$connections": {
               "defaultValue": {},
               "type": "Object"
+            },
+            "rssFeedUrl": {
+              "value": "[parameters('rssFeedUrl')]"
             }
           },
           "triggers": {
             "Whenever_a_Feed_Item_is_Published": {
               "recurrence": {
-                "interval": 30,
+                "interval": 2,
                 "frequency": "Minute",
                 "timeZone": "India Standard Time"
               },
@@ -64,7 +68,7 @@
                 "method": "get",
                 "path": "/OnNewFeed",
                 "queries": {
-                  "feedUrl": "@parameters('rssFeedUrl')"
+                  "feedUrl":  "@parameters('rssFeedUrl')"
                 }
               }
             }
@@ -156,6 +160,9 @@
                 "connectionName": "rss"
               }
             }
+          },
+          "rssFeedUrl": {
+            "value": "[parameters('rssFeedUrl')]"
           }
         }
       }
