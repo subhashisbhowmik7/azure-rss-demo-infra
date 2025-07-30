@@ -10,7 +10,7 @@
       "type": "string",
       "defaultValue": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/resourceGroups/SB-Test-RG/providers/Microsoft.Web/connections/rss"
     },
-    "rssFeedUrl": {
+    "rssFeedUrls": {
       "type": "array",
       "metadata": {
         "description": "RSS feed URL to monitor"
