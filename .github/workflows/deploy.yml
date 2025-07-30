@@ -43,7 +43,6 @@ jobs:
           template: infra/template.json
           parameters: >
             @infra/parameters.json
-            rssFeedUrl=${{ steps.set_rss_url.outputs.rssFeedUrl }}
             functionAppUri=${{ secrets.FUNCTION_APP_URI }}
             functionAppKey=${{ secrets.FUNCTION_APP_KEY }}
           failOnStdErr: false
