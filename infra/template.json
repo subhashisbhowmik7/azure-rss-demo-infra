@@ -12,7 +12,6 @@
     },
     "rssFeedUrl": {
       "type": "string",
-      "defaultValue": "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
       "metadata": {
         "description": "RSS feed URL to monitor"
       }
@@ -74,6 +73,19 @@
             }
           },
           "actions": {
+            "Initialize_lastItemId": {
+              "runAfter": {},
+              "type": "InitializeVariable",
+              "inputs": {
+                "variables": [
+                  {
+                    "name": "lastItemId",
+                    "type": "string",
+                    "value": ""
+                  }
+                ]
+              }
+            },
             "Input_Title_Link": {
               "runAfter": {
                 "Initialize_lastItemId": [
@@ -89,6 +101,22 @@
               }
             },
             "Condition": {
+              "type": "If",
+              "runAfter": {
+                "Input_Title_Link": ["Succeeded"]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@triggerBody()?['id']",
+                        "@variables('lastItemId')"
+                      ]
+                    }
+                  }
+                ]
+              },
               "actions": {
                 "Set_lastItemId": {
                   "type": "SetVariable",
@@ -118,37 +146,6 @@
                     }
                   }
                 }
-              },
-              "runAfter": {
-                "Input_Title_Link": [
-                  "Succeeded"
-                ]
-              },
-              "expression": {
-                "and": [
-                  {
-                    "not": {
-                      "equals": [
-                        "@triggerBody()?['id']",
-                        "@variables('lastItemId')"
-                      ]
-                    }
-                  }
-                ]
-              },
-              "type": "If"
-            },
-            "Initialize_lastItemId": {
-              "runAfter": {},
-              "type": "InitializeVariable",
-              "inputs": {
-                "variables": [
-                  {
-                    "name": "lastItemId",
-                    "type": "string",
-                    "value": ""
-                  }
-                ]
               }
             }
           },
