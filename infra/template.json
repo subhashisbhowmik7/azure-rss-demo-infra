@@ -11,7 +11,7 @@
       "defaultValue": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/resourceGroups/SB-Test-RG/providers/Microsoft.Web/connections/rss"
     },
     "rssFeedUrl": {
-      "type": "string",
+      "type": "array",
       "metadata": {
         "description": "RSS feed URL to monitor"
       }
@@ -33,8 +33,12 @@
     {
       "type": "Microsoft.Logic/workflows",
       "apiVersion": "2017-07-01",
-      "name": "[parameters('workflows_rss_feed_polling_name')]",
+      "name": "[concat(parameters('workflows_rss_feed_polling_name'), '-', copyIndex())]",
       "location": "southindia",    
+      "copy": {
+        "name": "workflowLoop",
+        "count": "[length(parameters('rssFeedUrls'))]"
+      },
       "properties": {
         "state": "Enabled",
         "definition": {
@@ -67,7 +71,7 @@
                 "method": "get",
                 "path": "/OnNewFeed",
                 "queries": {
-                  "feedUrl":  "@parameters('rssFeedUrl')"
+                  "feedUrl": "@parameters('rssFeedUrl')"
                 }
               }
             }
@@ -162,7 +166,7 @@
             }
           },
           "rssFeedUrl": {
-            "value": "[parameters('rssFeedUrl')]"
+            "value": "[parameters('rssFeedUrls')[copyIndex()]]"
           }
         }
       }
