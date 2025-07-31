@@ -5,11 +5,11 @@
         "workflows_rss_feed_polling_name": {
             "value": "rss-feed-polling"
         },
-        "connections_rss_externalid": {
-            "value": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/resourceGroups/SB-Test-RG/providers/Microsoft.Web/connections/rss"
-        },
         "rssFeedUrl": {
-        "value": "https://timesofindia.indiatimes.com/rssfeeds/4719148.cms"
+            "value": "https://timesofindia.indiatimes.com/rssfeeds/4719148.cms"
+        },
+        "location": {
+            "value": "southindia"
         }
     }
 }

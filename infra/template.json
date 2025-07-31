@@ -6,9 +6,9 @@
       "type": "string",
       "defaultValue": "rss-feed-polling"
     },
-    "connections_rss_externalid": {
+    "location": {
       "type": "string",
-      "defaultValue": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/resourceGroups/SB-Test-RG/providers/Microsoft.Web/connections/rss"
+      "defaultValue": "southindia"
     },
     "rssFeedUrl": {
       "type": "string",
@@ -35,7 +35,7 @@
       "type": "Microsoft.Logic/workflows",
       "apiVersion": "2017-07-01",
       "name": "[parameters('workflows_rss_feed_polling_name')]",
-      "location": "southindia",    
+      "location": "[parameters('location')]",
       "properties": {
         "state": "Enabled",
         "definition": {
@@ -158,8 +158,8 @@
           "$connections": {
             "value": {
               "rss": {
-                "id": "/subscriptions/091adfdd-217d-45e3-a6c5-644b880117ab/providers/Microsoft.Web/locations/southindia/managedApis/rss",
-                "connectionId": "[parameters('connections_rss_externalid')]",
+                "id": "[resourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'rss')]",
+                "connectionId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/rss')]",
                 "connectionName": "rss"
               }
             }
