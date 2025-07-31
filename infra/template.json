@@ -170,10 +170,12 @@
         "parameters": {
           "$connections": {
             "value": {
-              "rss": {
-                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/rss')]",
-                "connectionId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/rss')]",
-                "connectionName": "rss"
+              "connectionReferences": {
+                "rss": {
+                  "connectionId": "[parameters('connections_rss_externalid')]",
+                  "connectionName": "rss",
+                  "id": "[parameters('connections_rss_externalid')]"
+                }
               }
             }
           },
