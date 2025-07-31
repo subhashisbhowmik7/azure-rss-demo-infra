@@ -158,7 +158,7 @@
           "$connections": {
             "value": {
               "rss": {
-                "id": "[resourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'rss')]",
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/rss')]",
                 "connectionId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/rss')]",
                 "connectionName": "rss"
               }
